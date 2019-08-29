@@ -2,14 +2,15 @@ package controllers.reports;
 
 import java.io.IOException;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
+import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import models.Report;
+import utils.DBUtil;
 
 /**
  * Servlet implementation class ReportsCount
@@ -18,13 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 public class ReportsCount extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    public void init(ServletConfig config) throws ServletException{
-        super.init(config);
-        Integer count = 0;
-        ServletContext application = config.getServletContext();
-        application.setAttribute("count", count);
-        System.out.println("ini()が実行されました");
-    }
     public ReportsCount() {
         super();
         // TODO Auto-generated constructor stub
@@ -33,14 +27,32 @@ public class ReportsCount extends HttpServlet {
     /**
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        //CSRF対策
+        request.setAttribute("_token", request.getSession().getId());
+        String _token = (String) request.getParameter("_token");
+        if (_token != null && _token.equals(request.getSession().getId())) {
+            EntityManager em = DBUtil.createEntityManager();
 
-        ServletContext application = this.getServletContext();
-        Integer count = (Integer)application.getAttribute("count");
-        count++;
-        application.setAttribute("count", count);
+            //IDを取得
+            Report c = em.find(Report.class, Integer.parseInt(request.getParameter("report.id")));
 
+            //countに+1する
+            Integer count = c.getCount();
+            count++;
+            c.setCount(count);
 
+            //データベース更新
+            em.getTransaction().begin();
+            em.getTransaction().commit();
+            em.close();
+
+            response.sendRedirect(request.getContextPath() + "/reports/show?id="
+                    + Integer.parseInt(request.getParameter("report.id")));
+
+            request.getSession().removeAttribute("report.id");
+
+        }
     }
-
 }

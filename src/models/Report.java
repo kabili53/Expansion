@@ -63,7 +63,7 @@ public class Report {
     @Column(name = "updated_at", nullable = false)
     private Timestamp updated_at;
 
-    @Column(name ="count")
+    @Column(name ="count", nullable = false)
     private Integer count;
 
     public Integer getCount() {

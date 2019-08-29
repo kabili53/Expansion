@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<% Integer name = (Integer)application.getAttribute("count"); %>
 <c:import url="/WEB-INF/views/layout/app.jsp">
     <c:param name="content">
         <c:if test="${flush != null}">
@@ -25,7 +24,7 @@
                         <td class="report_date"><fmt:formatDate value='${report.report_date}' pattern='yyyy-MM-dd' /></td>
                         <td class="report_title">${report.title}</td>
                         <td class="report_action"><a href="<c:url value='/reports/show?id=${report.id}' />">詳細を見る</a></td>
-                        <td class="report_count"><%= name %></td>
+                        <td class="report_count">${report.count}</td>
                     </tr>
                 </c:forEach>
             </tbody>
