@@ -37,7 +37,6 @@ public class ReportsCount extends HttpServlet {
 
             //IDを取得
             Report c = em.find(Report.class, Integer.parseInt(request.getParameter("report.id")));
-
             //countに+1する
             Integer count = c.getCount();
             count++;
@@ -51,7 +50,6 @@ public class ReportsCount extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/reports/show?id="
                     + Integer.parseInt(request.getParameter("report.id")));
 
-            request.getSession().removeAttribute("report.id");
 
         }
     }

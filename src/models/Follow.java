@@ -13,15 +13,17 @@ import javax.persistence.Table;
 
 @Table(name = "Follow")
 @NamedQueries({
-    @NamedQuery(
-            name = "getAllFollow",
-            query = "SELECT r FROM Report AS r ORDER BY r.id DESC"
-            ),
-    @NamedQuery(
-            name = "getFollowCount",
-            query = "SELECT COUNT(r) FROM Report AS r"
-            ),
+        @NamedQuery(name = "getAllFollow", query = "SELECT r FROM Follow AS r ORDER BY r.id DESC"),
+        @NamedQuery(name = "getFollowCount", query = "SELECT COUNT(r) FROM Follow AS r"),
+
+        //ログイン中IDをfollowerで検索　かつ　レポート製作者IDをfolloweeで検索　一致するデータがあったら出力
+        @NamedQuery(name = "getfollowid", query = "SELECT (a) FROM Follow a WHERE a.followee = :followee AND a.follower = :follower"),
+
+        //ログインユーザだけ出力
+        @NamedQuery(name = "getMyAllFollow", query = "SELECT b FROM Follow b WHERE b.follower = :follower"),
+
 })
+
 @Entity
 public class Follow {
     @Id
@@ -30,15 +32,12 @@ public class Follow {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "follow_id", nullable = false)
-    private Employee employee;
+    @JoinColumn(name = "follower", nullable = false)
+    private Employee follower;
 
     @ManyToOne
-    @JoinColumn(name = "follow_title", nullable = false)
-    private Report report;
-
-    @Column(name = "follow_flag", nullable = false)
-    private Integer delete_flag;
+    @JoinColumn(name = "followee", nullable = false)
+    private Employee followee;
 
     public Integer getId() {
         return id;
@@ -48,28 +47,19 @@ public class Follow {
         this.id = id;
     }
 
-    public Employee getEmployee() {
-        return employee;
+    public Employee getFollower() {
+        return follower;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setFollower(Employee follower) {
+        this.follower = follower;
     }
 
-    public Report getReport() {
-        return report;
+    public Employee getFollowee() {
+        return followee;
     }
 
-    public void setReport(Report report) {
-        this.report = report;
+    public void setFollowee(Employee followee) {
+        this.followee = followee;
     }
-
-    public Integer getDelete_flag() {
-        return delete_flag;
-    }
-
-    public void setDelete_flag(Integer delete_flag) {
-        this.delete_flag = delete_flag;
-    }
-
 }

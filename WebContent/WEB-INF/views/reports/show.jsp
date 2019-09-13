@@ -43,12 +43,30 @@
                         </tr>
                     </tbody>
                 </table>
-
                <form method="POST" action="<c:url value='/reports/count' />">
                     <input type="hidden" name="report.id" value="${report.id}" />
                     <button type="submit">いいね</button>
                     <input type="hidden" name="_token" value="${_token}" />
                </form>
+
+               <c:choose>
+                    <c:when test="${follow !=null && report.employee.id == follow.followee.id }" >
+                        <form method="POST" action="<c:url value='/follow/destroy' />">
+                           <input type="hidden" name="follow.id" value="${follow.id}" />
+                           <input type="hidden" name="report.id" value="${report.id}" />
+                           <input type="hidden" name= "login_employee" value= "${sessionScope.login_employee.id }"/>
+                         <button type="submit">フォローを解除</button>
+                        </form>
+                    </c:when>
+
+                    <c:when test= "${sessionScope.login_employee.id != report.employee.id }">
+                        <form method="POST" action="<c:url value='/reports/follow' />">
+                           <input type="hidden" name="report.id" value="${report.id}" />
+                           <input type="hidden" name= "login_employee" value= "${sessionScope.login_employee.id }"/>
+                           <button type="submit">フォローする</button>
+                        </form>
+                    </c:when>
+                </c:choose>
 
                 <c:if test="${sessionScope.login_employee.id == report.employee.id}">
                     <p><a href="<c:url value='/reports/edit?id=${report.id}' />">この日報を編集する</a></p>
