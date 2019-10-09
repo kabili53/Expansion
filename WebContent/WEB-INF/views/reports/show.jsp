@@ -3,6 +3,11 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <c:import url="/WEB-INF/views/layout/app.jsp">
     <c:param name="content">
+        <c:if test="${flush != null}">
+            <div id="flush_success">
+                <c:out value="${flush}"></c:out>
+            </div>
+         </c:if>
         <c:choose>
             <c:when test="${report != null}">
                 <h2>日報　詳細ページ</h2>
@@ -50,19 +55,17 @@
                </form>
 
                <c:choose>
-                    <c:when test="${follow !=null && report.employee.id == follow.followee.id }" >
+                    <c:when test="${follow !=null}" >
                         <form method="POST" action="<c:url value='/follow/destroy' />">
                            <input type="hidden" name="follow.id" value="${follow.id}" />
                            <input type="hidden" name="report.id" value="${report.id}" />
-                           <input type="hidden" name= "login_employee" value= "${sessionScope.login_employee.id }"/>
                          <button type="submit">フォローを解除</button>
                         </form>
                     </c:when>
 
-                    <c:when test= "${sessionScope.login_employee.id != report.employee.id }">
+                    <c:when test= "${follow == null && report.employee.id != sessionScope.login_employee.id}">
                         <form method="POST" action="<c:url value='/reports/follow' />">
                            <input type="hidden" name="report.id" value="${report.id}" />
-                           <input type="hidden" name= "login_employee" value= "${sessionScope.login_employee.id }"/>
                            <button type="submit">フォローする</button>
                         </form>
                     </c:when>

@@ -45,7 +45,6 @@ public class ReportsFollow extends HttpServlet {
         Report followee_id = em.find(Report.class, Integer.parseInt(request.getParameter("report.id")));//レポートID取得
         Employee folower_id = (Employee) request.getSession().getAttribute("login_employee");//ログインID取得
 
-
         Follow f = new Follow();
 
         f.setFollowee(followee_id.getEmployee());
@@ -56,10 +55,8 @@ public class ReportsFollow extends HttpServlet {
         em.getTransaction().begin();
         em.getTransaction().commit();
         em.close();
-
         //リダイレクト
         response.sendRedirect(request.getContextPath() + "/reports/show?id="
                 + Integer.parseInt(request.getParameter("report.id")));
-
     }
 }

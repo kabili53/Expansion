@@ -18,9 +18,9 @@ import javax.persistence.Table;
 
         //ログイン中IDをfollowerで検索　かつ　レポート製作者IDをfolloweeで検索　一致するデータがあったら出力
         @NamedQuery(name = "getfollowid", query = "SELECT (a) FROM Follow a WHERE a.followee = :followee AND a.follower = :follower"),
-
         //ログインユーザだけ出力
         @NamedQuery(name = "getMyAllFollow", query = "SELECT b FROM Follow b WHERE b.follower = :follower"),
+
 
 })
 
@@ -36,7 +36,7 @@ public class Follow {
     private Employee follower;
 
     @ManyToOne
-    @JoinColumn(name = "followee", nullable = false)
+    @JoinColumn(name = "followee", nullable = false,unique = true)
     private Employee followee;
 
     public Integer getId() {

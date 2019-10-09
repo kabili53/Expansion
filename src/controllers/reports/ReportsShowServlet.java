@@ -51,6 +51,7 @@ public class ReportsShowServlet extends HttpServlet {
 
         }
 
+
         em.close();
 
 
